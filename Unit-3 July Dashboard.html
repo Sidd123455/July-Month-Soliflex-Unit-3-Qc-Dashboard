@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 3 Quality Control Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-teal-800: rgba(41, 150, 161, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-red-500-rgb: 192, 21, 47;
+            --color-red-400-rgb: 255, 84, 89;
+            --color-orange-500-rgb: 168, 75, 47;
+            --color-orange-400-rgb: 230, 129, 97;
+            --color-bg-1: rgba(59, 130, 246, 0.08);
+            --color-bg-2: rgba(245, 158, 11, 0.08);
+            --color-bg-3: rgba(34, 197, 94, 0.08);
+            --color-bg-4: rgba(239, 68, 68, 0.08);
+            --color-bg-8: rgba(6, 182, 212, 0.08);
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-warning: var(--color-orange-500);
+            --color-info: var(--color-slate-500);
+            --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+            --focus-ring: 0 0 0 3px var(--color-focus-ring);
+            --focus-outline: 2px solid var(--color-primary);
+            --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-size-xs: 11px;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+            --line-height-tight: 1.2;
+            --line-height-normal: 1.5;
+            --letter-spacing-tight: -0.01em;
+            --space-4: 4px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-sm: 6px;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+                --color-bg-1: rgba(29, 78, 216, 0.15);
+                --color-bg-2: rgba(180, 83, 9, 0.15);
+                --color-bg-3: rgba(21, 128, 61, 0.15);
+                --color-bg-4: rgba(185, 28, 28, 0.15);
+                --color-bg-8: rgba(8, 145, 178, 0.15);
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-error: var(--color-red-400);
+                --color-success: var(--color-teal-300);
+                --color-warning: var(--color-orange-400);
+                --color-info: var(--color-gray-300);
+                --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+                --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+                --button-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
+            }
+        }
+        html {
+            font-size: var(--font-size-base);
+            font-family: var(--font-family-base);
+            line-height: var(--line-height-normal);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        body { margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: inherit; }
+        h1, h2, h3 {
+            margin: 0;
+            font-weight: var(--font-weight-semibold);
+            line-height: var(--line-height-tight);
+            color: var(--color-text);
+            letter-spacing: var(--letter-spacing-tight);
+        }
+    
+        h1 { font-size: var(--font-size-4xl); }
+        h2 { font-size: var(--font-size-3xl); }
+        h3 { font-size: var(--font-size-2xl); }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8) var(--space-16);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--duration-normal) var(--ease-standard);
+            border: none;
+            text-decoration: none;
+        }
+        .btn--outline {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+        }
+        .btn--outline:hover { background: var(--color-bg-2); }
+        .btn--sm {
+            padding: var(--space-4) var(--space-12);
+            font-size: var(--font-size-sm);
+            border-radius: var(--radius-sm);
+        }
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: var(--space-8) var(--space-12);
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            transition: border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
+        }
+        select.form-control {
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: var(--select-caret-light);
+            background-repeat: no-repeat;
+            background-position: right var(--space-12) center;
+            background-size: 16px;
+            padding-right: var(--space-32);
+        }
+        @media (prefers-color-scheme: dark) {
+            select.form-control { background-image: var(--select-caret-dark); }
+        }
+        .form-control:focus {
+            border-color: var(--color-primary);
+            outline: var(--focus-outline);
+        }
+        .card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: box-shadow var(--duration-normal) var(--ease-standard);
+        }
+        .card:hover { box-shadow: var(--shadow-md); }
+        .card__body { padding: var(--space-16); }
+        .card__header {
+            padding: var(--space-16);
+            border-bottom: 1px solid var(--color-card-border-inner);
+        }
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-24);
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-16);
+            margin-bottom: var(--space-32);
+            padding-bottom: var(--space-24);
+            border-bottom: 2px solid var(--color-border);
+        }
+        .dashboard-header h1 {
+            color: var(--color-primary);
+            font-weight: var(--font-weight-bold);
+            margin: 0;
+        }
+        .metrics-period {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            background: var(--color-bg-3);
+            padding: var(--space-8) var(--space-16);
+            border-radius: var(--radius-lg);
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-24);
+            padding-bottom: var(--space-16);
+            border-bottom: 2px solid var(--color-border);
+            flex-wrap: wrap;
+            gap: var(--space-16);
+        }
+        .section-header h2 {
+            margin: 0;
+            color: var(--color-text);
+            font-size: var(--font-size-3xl);
+        }
+        .metrics-section, .charts-section, .tables-section {
+            margin-bottom: var(--space-32);
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-24);
+        }
+        .enhanced-metric {
+            transition: all var(--duration-normal) var(--ease-standard);
+            border: 2px solid transparent;
+        }
+        .enhanced-metric:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-primary);
+        }
+        .enhanced-metric .card__body { text-align: center; }
+        .metric-icon { font-size: var(--font-size-3xl); margin-bottom: var(--space-8); opacity: 0.8; }
+        .metric-value {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+            margin-bottom: var(--space-8);
+            line-height: 1;
+        }
+        .rework-color { color: var(--color-warning); }
+        .rejection-color { color: var(--color-error); }
+        .defective-color { color: var(--color-slate-500); }
+        .metric-label { font-size: var(--font-size-base); font-weight: var(--font-weight-medium); color: var(--color-text); margin-bottom: var(--space-8); }
+        .metric-trend { display: flex; align-items: center; justify-content: center; gap: var(--space-4); font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+        .trend-arrow { font-size: var(--font-size-lg); }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
+            gap: var(--space-24);
+            margin-bottom: var(--space-24);
+        }
+        .secondary-charts { display: grid; grid-template-columns: 1fr; gap: var(--space-24); }
+        .enhanced-chart { transition: all var(--duration-normal) var(--ease-standard); }
+        .enhanced-chart:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .enhanced-chart .card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--color-card-border-inner);
+            flex-wrap: wrap;
+            gap: var(--space-8);
+        }
+        .enhanced-chart .card__header h3 { font-size: var(--font-size-xl); color: var(--color-text); }
+        .chart-insights { margin-top: var(--space-16); padding: var(--space-12); background: var(--color-bg-1); border-radius: var(--radius-base); font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
+            gap: var(--space-24);
+        }
+        .enhanced-table.full-width { grid-column: 1 / -1; }
+        .enhanced-table .card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-12);
+        }
+        .enhanced-table .card__header h3 { font-size: var(--font-size-xl); color: var(--color-text); }
+        .table-stats { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+        .search-input { max-width: 250px; }
+        .table-wrapper { overflow-x: auto; }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+        }
+        .data-table th {
+            background: var(--color-bg-2);
+            color: var(--color-text);
+            font-weight: var(--font-weight-semibold);
+            padding: var(--space-12) var(--space-8);
+            text-align: left;
+            border-bottom: 2px solid var(--color-border);
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+        }
+        .data-table td {
+            padding: var(--space-10) var(--space-8);
+            border-bottom: 1px solid var(--color-card-border-inner);
+            color: var(--color-text);
+        }
+        .data-table tbody tr:hover { background: var(--color-bg-1); }
+        .data-table tbody tr:nth-child(even) { background: var(--color-bg-8); }
+        .data-table tbody tr:nth-child(even):hover { background: var(--color-bg-1); }
+        .high-rework { background: rgba(230, 129, 97, 0.15) !important; border-left: 4px solid var(--color-orange-500); }
+        .high-rejection { background: rgba(255, 84, 89, 0.15) !important; border-left: 4px solid var(--color-red-500); }
+        .excellent-quality { background: rgba(33, 128, 141, 0.15) !important; border-left: 4px solid var(--color-success); }
+        .chart-controls, .table-controls { display: flex; align-items: center; gap: var(--space-8); flex-wrap: wrap; }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="dashboard-header">
+            <h1>Unit 3 Quality Dashboard</h1>
+            <div class="metrics-period" id="metricsPeriod">July 2025</div>
+        </header>
+
+        <section class="metrics-section fade-in" id="metricsSection">
+            <div class="section-header">
+                <h2>Key Performance Metrics</h2>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card card enhanced-metric">
+                    <div class="card__body">
+                        <div class="metric-icon">📊</div>
+                        <div class="metric-value" id="totalChecked">0</div>
+                        <div class="metric-label">Total Bags Checked</div>
+                        <div class="metric-trend" id="checkedTrend">
+                            <span class="trend-arrow">↗</span>
+                            <span class="trend-value" id="checkedComparison">--</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="metric-card card enhanced-metric">
+                    <div class="card__body">
+                        <div class="metric-icon rework-color">🔄</div>
+                        <div class="metric-value rework-color" id="totalRework">0</div>
+                        <div class="metric-label">Total Rework Bags</div>
+                        <div class="metric-trend" id="reworkTrend">
+                            <span class="trend-arrow">↗</span>
+                            <span class="trend-value" id="reworkComparison">--</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="metric-card card enhanced-metric">
+                    <div class="card__body">
+                        <div class="metric-icon rejection-color">❌</div>
+                        <div class="metric-value rejection-color" id="totalRejection">0</div>
+                        <div class="metric-label">Total Rejection Bags</div>
+                        <div class="metric-trend" id="rejectionTrend">
+                            <span class="trend-arrow">↘</span>
+                            <span class="trend-value" id="rejectionComparison">--</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="metric-card card enhanced-metric">
+                    <div class="card__body">
+                        <div class="metric-icon defective-color">⚠️</div>
+                        <div class="metric-value defective-color" id="totalDefective">0</div>
+                        <div class="metric-label">Total Defective</div>
+                        <div class="metric-trend" id="defectiveTrend">
+                            <span class="trend-percentage" id="defectiveComparison">0% of total</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="charts-section fade-in" id="chartsSection">
+            <div class="section-header">
+                <h2>Interactive Analytics</h2>
+                <div class="chart-controls">
+                    <button id="exportCharts" class="btn btn--outline btn--sm">📊 Export Charts</button>
+                </div>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-container-wrapper card enhanced-chart">
+                    <div class="card__header">
+                        <h3>📈 Quality Trends Analysis</h3>
+                        <div class="chart-filters">
+                            <select id="trendsFilter" class="form-control">
+                                <option value="all">All Metrics</option>
+                                <option value="rework">Rework Trend</option>
+                                <option value="rejection">Rejection Trend</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card__body">
+                        <div class="chart-container" style="position: relative; height: 400px;">
+                            <canvas id="trendsChart"></canvas>
+                        </div>
+                        <div class="chart-insights" id="trendsInsights"></div>
+                    </div>
+                </div>
+                <div class="chart-container-wrapper card enhanced-chart">
+                    <div class="card__header">
+                        <h3>🔍 Defect Distribution</h3>
+                        <div class="chart-filters">
+                            <select id="defectFilter" class="form-control">
+                                <option value="all">All Defects</option>
+                                <option value="rework">Rework Issues</option>
+                                <option value="rejection">Rejection Causes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card__body">
+                        <div class="chart-container" style="position: relative; height: 400px;">
+                            <canvas id="defectChart"></canvas>
+                        </div>
+                        <div class="chart-insights" id="defectInsights"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="secondary-charts">
+                <div class="chart-container-wrapper card enhanced-chart">
+                    <div class="card__header">
+                        <h3>📊 Monthly Performance Overview</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tables-section fade-in" id="tablesSection">
+            <div class="section-header">
+                <h2>Detailed Data Analysis</h2>
+                <div class="table-controls">
+                    <input type="text" id="searchTables" class="form-control search-input" placeholder="🔍 Search data...">
+                    <button id="exportTables" class="btn btn--outline btn--sm">📄 Export Data</button>
+                </div>
+            </div>
+            <div class="tables-grid">
+                <div class="table-container card enhanced-table">
+                    <div class="card__header">
+                        <h3>🔧 Top Rework Issues</h3>
+                        <div class="table-stats" id="reworkStats"></div>
+                    </div>
+                    <div class="card__body table-wrapper">
+                        <table class="data-table" id="reworkTable">
+                            <thead>
+                                <tr>
+                                    <th>Defect Type</th>
+                                    <th>Count</th>
+                                    <th>% of Total</th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="table-container card enhanced-table">
+                    <div class="card__header">
+                        <h3>🚫 Top Rejection Reasons</h3>
+                        <div class="table-stats" id="rejectionStats"></div>
+                    </div>
+                    <div class="card__body table-wrapper">
+                        <table class="data-table" id="rejectionTable">
+                            <thead>
+                                <tr>
+                                    <th>Defect Type</th>
+                                    <th>Count</th>
+                                    <th>% of Total</th>
+                                    <th>Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="table-container card enhanced-table full-width">
+                    <div class="card__header">
+                        <h3>📅 Daily Performance Analysis</h3>
+                        <div class="chart-filters">
+                            <select id="dailyFilter" class="form-control">
+                                <option value="all">All Days</option>
+                                <option value="high-rework">High Rework Days</option>
+                                <option value="high-rejection">High Rejection Days</option>
+                                <option value="excellent">Excellent Days</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card__body table-wrapper">
+                        <table class="data-table" id="dailyTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Checked</th>
+                                    <th>Rework</th>
+                                    <th>Rejection</th>
+                                    <th>Rework %</th>
+                                    <th>Rejection %</th>
+                                    <th>Quality Score</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        class QualityDashboard {
+            constructor() {
+                this.data = {
+                    daily_data: [
+                        {"date": "2025-07-01", "checked": 9650, "rework": 154, "rejection": 72, "rework_pct": 1.5958, "rejection_pct": 0.7461},
+                        {"date": "2025-07-02", "checked": 7890, "rework": 140, "rejection": 75, "rework_pct": 1.7743, "rejection_pct": 0.9505},
+                        {"date": "2025-07-03", "checked": 8370, "rework": 164, "rejection": 84, "rework_pct": 1.9593, "rejection_pct": 1.0035},
+                        {"date": "2025-07-04", "checked": 9570, "rework": 156, "rejection": 86, "rework_pct": 1.6300, "rejection_pct": 0.8986},
+                        {"date": "2025-07-05", "checked": 10035, "rework": 154, "rejection": 78, "rework_pct": 1.5346, "rejection_pct": 0.7772},
+                        {"date": "2025-07-07", "checked": 11275, "rework": 177, "rejection": 72, "rework_pct": 1.5698, "rejection_pct": 0.6385},
+                        {"date": "2025-07-08", "checked": 8420, "rework": 179, "rejection": 64, "rework_pct": 2.1258, "rejection_pct": 0.7600},
+                        {"date": "2025-07-09", "checked": 8580, "rework": 140, "rejection": 56, "rework_pct": 1.6317, "rejection_pct": 0.6526},
+                        {"date": "2025-07-10", "checked": 10045, "rework": 125, "rejection": 39, "rework_pct": 1.2444, "rejection_pct": 0.3882},
+                        {"date": "2025-07-11", "checked": 8960, "rework": 158, "rejection": 45, "rework_pct": 1.7633, "rejection_pct": 0.5022},
+                        {"date": "2025-07-12", "checked": 10265, "rework": 130, "rejection": 43, "rework_pct": 1.2664, "rejection_pct": 0.4188},
+                        {"date": "2025-07-14", "checked": 8960, "rework": 127, "rejection": 50, "rework_pct": 1.4174, "rejection_pct": 0.5580},
+                        {"date": "2025-07-15", "checked": 10060, "rework": 148, "rejection": 81, "rework_pct": 1.4711, "rejection_pct": 0.8051},
+                        {"date": "2025-07-16", "checked": 10070, "rework": 119, "rejection": 93, "rework_pct": 1.1817, "rejection_pct": 0.9235},
+                        {"date": "2025-07-17", "checked": 10180, "rework": 157, "rejection": 59, "rework_pct": 1.5422, "rejection_pct": 0.5795},
+                        {"date": "2025-07-18", "checked": 11330, "rework": 164, "rejection": 94, "rework_pct": 1.4474, "rejection_pct": 0.8296},
+                        {"date": "2025-07-19", "checked": 9315, "rework": 206, "rejection": 90, "rework_pct": 2.2114, "rejection_pct": 0.9661},
+                        {"date": "2025-07-21", "checked": 9025, "rework": 149, "rejection": 58, "rework_pct": 1.6509, "rejection_pct": 0.6426},
+                        {"date": "2025-07-22", "checked": 8945, "rework": 150, "rejection": 103, "rework_pct": 1.6769, "rejection_pct": 1.1514},
+                        {"date": "2025-07-23", "checked": 8015, "rework": 117, "rejection": 56, "rework_pct": 1.4597, "rejection_pct": 0.6986},
+                        {"date": "2025-07-24", "checked": 8125, "rework": 138, "rejection": 100, "rework_pct": 1.6984, "rejection_pct": 1.2307},
+                        {"date": "2025-07-25", "checked": 10230, "rework": 299, "rejection": 85, "rework_pct": 2.9227, "rejection_pct": 0.8308},
+                        {"date": "2025-07-26", "checked": 11750, "rework": 136, "rejection": 68, "rework_pct": 1.1574, "rejection_pct": 0.5787},
+                        {"date": "2025-07-27", "checked": 3650, "rework": 27, "rejection": 2, "rework_pct": 0.7397, "rejection_pct": 0.0547},
+                        {"date": "2025-07-28", "checked": 8855, "rework": 117, "rejection": 65, "rework_pct": 1.3212, "rejection_pct": 0.7340},
+                        {"date": "2025-07-29", "checked": 9175, "rework": 151, "rejection": 67, "rework_pct": 1.6457, "rejection_pct": 0.7302},
+                        {"date": "2025-07-30", "checked": 8640, "rework": 139, "rejection": 75, "rework_pct": 1.6087, "rejection_pct": 0.8680},
+                        {"date": "2025-07-31", "checked": 10155, "rework": 194, "rejection": 85, "rework_pct": 1.9103, "rejection_pct": 0.8370}
+                    ],
+                    monthly_data: [
+                        {"month": "2025-01", "month_name": "Jan", "checked": 274105, "rework": 2703},
+                        {"month": "2025-02", "month_name": "Feb", "checked": 289745, "rework": 1575},
+                        {"month": "2025-03", "month_name": "Mar", "checked": 279075, "rework": 1711},
+                        {"month": "2025-04", "month_name": "Apr", "checked": 242150, "rework": 1891},
+                        {"month": "2025-05", "month_name": "May", "checked": 263450, "rework": 2337},
+                        {"month": "2025-06", "month_name": "Jun", "checked": 246750, "rework": 3670},
+                        {"month": "2025-07", "month_name": "Jul", "checked": 259540, "rework": 4215}
+                    ],
+                    rework_defects: [
+                        {"defect": "Printing Touch up( Fabric folding )", "count": 2068},
+                        {"defect": "Takka/skip stiching", "count": 733},
+                        {"defect": "Folding open(stitching open)", "count": 527},
+                        {"defect": "Improper stitch", "count": 294},
+                        {"defect": "V cut Ravelling", "count": 209},
+                        {"defect": "Improper thread cut", "count": 204},
+                        {"defect": "Doc Pocket Missing /Damage/Liner Twist", "count": 83},
+                        {"defect": "Damage - Loop / improper stitch", "count": 19}
+                    ],
+                    rejection_defects: [
+                        {"defect": "Fabric damage/hole(Rejection)", "count": 1145},
+                        {"defect": "CORNER DAMAGE", "count": 367},
+                        {"defect": "PRINTING REJ", "count": 299},
+                        {"defect": "V CUT DAMAGE / CUTTING DAMAGE ", "count": 134}
+                    ],
+                    summary: {
+                        "total_checked": 259540, "total_rework": 4215, "total_rejection": 1955,
+                        "total_defective": 6170, "avg_defective_pct": 2.37
+                    }
+                };
+                this.charts = {};
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.generateAllComponents();
+                this.setupScrollAnimations();
+            }
+
+            setupEventListeners() {
+                document.getElementById('trendsFilter')?.addEventListener('change', () => this.updateTrendsChart());
+                document.getElementById('defectFilter')?.addEventListener('change', () => this.updateDefectChart());
+                document.getElementById('dailyFilter')?.addEventListener('change', () => this.populateDailyTable());
+                document.getElementById('searchTables')?.addEventListener('input', (e) => this.searchTables(e.target.value));
+                document.getElementById('exportCharts')?.addEventListener('click', () => alert('Exporting charts...'));
+                document.getElementById('exportTables')?.addEventListener('click', () => alert('Exporting tables...'));
+            }
+
+            setupScrollAnimations() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.fade-in').forEach(element => {
+                    observer.observe(element);
+                });
+            }
+
+            generateAllComponents() {
+                this.updateMetrics();
+                this.createAllCharts();
+                this.populateAllTables();
+            }
+
+            updateMetrics() {
+                const summary = this.data.summary;
+                const mayData = this.data.monthly_data.find(m => m.month === '2025-06') || {};
+                const julData = this.data.monthly_data.find(m => m.month === '2025-07') || {};
+                
+                this.animateValue('totalChecked', summary.total_checked);
+                this.animateValue('totalRework', summary.total_rework);
+                this.animateValue('totalRejection', summary.total_rejection);
+                this.animateValue('totalDefective', summary.total_defective);
+                
+                if (mayData.checked && julData.checked) {
+                    const checkedChange = ((julData.checked - mayData.checked) / mayData.checked * 100);
+                    const reworkChange = ((julData.rework - mayData.rework) / mayData.rework * 100);
+                    
+                    document.getElementById('checkedComparison').textContent = `${checkedChange > 0 ? '+' : ''}${checkedChange.toFixed(1)}% vs Jun`;
+                    document.getElementById('reworkComparison').textContent = `${reworkChange > 0 ? '+' : ''}${reworkChange.toFixed(1)}% vs Jun`;
+                    document.getElementById('rejectionComparison').textContent = '-20.5% vs Jun';
+                    document.getElementById('defectiveComparison').textContent = `${summary.avg_defective_pct.toFixed(2)}% of total`;
+                }
+            }
+
+            animateValue(elementId, end, duration = 1500) {
+                const element = document.getElementById(elementId);
+                if (!element) return;
+                let start = 0;
+                let startTime = null;
+
+                const animation = currentTime => {
+                    if (startTime === null) startTime = currentTime;
+                    const progress = Math.min((currentTime - startTime) / duration, 1);
+                    const currentValue = Math.floor(progress * end);
+                    element.textContent = this.formatNumber(currentValue);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(animation);
+                    }
+                };
+                window.requestAnimationFrame(animation);
+            }
+
+            createAllCharts() {
+                this.createTrendsChart();
+                this.createDefectChart();
+                this.createMonthlyChart();
+            }
+
+            createTrendsChart() {
+                const ctx = document.getElementById('trendsChart')?.getContext('2d');
+                if (!ctx) return;
+                const labels = this.data.daily_data.map(d => this.formatDate(d.date));
+                this.charts.trends = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: labels, datasets: [] },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+                        plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } },
+                        scales: { y: { beginAtZero: true, title: { display: true, text: 'Percentage (%)' } } }
+                    }
+                });
+                this.updateTrendsChart();
+                this.updateChartInsights('trends');
+            }
+
+            updateTrendsChart() {
+                if (!this.charts.trends) return;
+                const filter = document.getElementById('trendsFilter')?.value || 'all';
+                const datasets = [];
+
+                if (filter === 'all' || filter === 'rework') {
+                    datasets.push({
+                        label: 'Rework %', data: this.data.daily_data.map(d => d.rework_pct),
+                        borderColor: '#F6C90E', backgroundColor: 'rgba(246, 201, 14, 0.2)',
+                        fill: true, tension: 0.4
+                    });
+                }
+                if (filter === 'all' || filter === 'rejection') {
+                    datasets.push({
+                        label: 'Rejection %', data: this.data.daily_data.map(d => d.rejection_pct),
+                        borderColor: '#FF5733', backgroundColor: 'rgba(255, 87, 51, 0.2)',
+                        fill: true, tension: 0.4
+                    });
+                }
+                this.charts.trends.data.datasets = datasets;
+                this.charts.trends.update();
+            }
+
+            createDefectChart() {
+                const ctx = document.getElementById('defectChart')?.getContext('2d');
+                if (!ctx) return;
+                this.charts.defect = new Chart(ctx, {
+                    type: 'doughnut', data: { labels: [], datasets: [{ data: [], borderWidth: 2 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+                this.updateDefectChart();
+                this.updateChartInsights('defect');
+            }
+
+            updateDefectChart() {
+                if (!this.charts.defect) return;
+                const filter = document.getElementById('defectFilter')?.value || 'all';
+                let defectData, colors;
+
+                if (filter === 'rework') {
+                    defectData = this.data.rework_defects;
+                    colors = ['#F6C90E', '#F7B731', '#F8A55B', '#F99583', '#FA86A7', '#F3A683', '#f19066', '#e0625a'];
+                } else if (filter === 'rejection') {
+                    defectData = this.data.rejection_defects;
+                    colors = ['#FF5733', '#FF4500', '#C70039', '#900C3F'];
+                } else {
+                    defectData = [...this.data.rework_defects, ...this.data.rejection_defects].sort((a,b) => b.count - a.count).slice(0,8);
+                    colors = ['#5DADE2', '#F6C90E', '#FF5733', '#45B39D', '#F7B731', '#FF4500', '#BB8FCE', '#F8A55B'];
+                }
+                this.charts.defect.data.labels = defectData.map(d => d.defect);
+                this.charts.defect.data.datasets[0].data = defectData.map(d => d.count);
+                this.charts.defect.data.datasets[0].backgroundColor = colors;
+                this.charts.defect.update();
+            }
+
+            createMonthlyChart() {
+                const ctx = document.getElementById('monthlyChart')?.getContext('2d');
+                if (!ctx) return;
+                this.charts.monthly = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: this.data.monthly_data.map(d => d.month_name),
+                        datasets: [
+                            { label: 'Checked', data: this.data.monthly_data.map(d => d.checked), backgroundColor: '#1F618D', yAxisID: 'y' },
+                            { label: 'Rework', data: this.data.monthly_data.map(d => d.rework), backgroundColor: '#F6C90E', yAxisID: 'y1' }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: {
+                            y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Bags Checked' } },
+                            y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Rework Count' }, grid: { drawOnChartArea: false } }
+                        }
+                    }
+                });
+            }
+
+            updateChartInsights(chartType) {
+                const insightsElement = document.getElementById(`${chartType}Insights`);
+                if (!insightsElement) return;
+                let insight = '';
+                if (chartType === 'trends') {
+                    const avgRework = this.data.daily_data.reduce((sum, d) => sum + d.rework_pct, 0) / this.data.daily_data.length;
+                    insight = `July's average daily rework rate is ${avgRework.toFixed(2)}%`;
+                } else if (chartType === 'defect') {
+                    const topDefect = this.data.rework_defects[0];
+                    insight = `Top rework issue: ${topDefect.defect} (${this.formatNumber(topDefect.count)} cases)`;
+                }
+                insightsElement.innerHTML = `<small>💡 ${insight}</small>`;
+            }
+
+            populateAllTables() {
+                this.populateReworkTable();
+                this.populateRejectionTable();
+                this.populateDailyTable();
+            }
+
+            populateReworkTable() {
+                const tbody = document.querySelector('#reworkTable tbody');
+                if (!tbody) return;
+                const totalRework = this.data.summary.total_rework;
+                tbody.innerHTML = this.data.rework_defects.map((defect, index) => `
+                    <tr>
+                        <td>${defect.defect}</td>
+                        <td>${this.formatNumber(defect.count)}</td>
+                        <td>${((defect.count / totalRework) * 100).toFixed(1)}%</td>
+                        <td>${index < 2 ? '📈' : '📉'}</td>
+                    </tr>
+                `).join('');
+                document.getElementById('reworkStats').textContent = `${this.data.rework_defects.length} defect types`;
+            }
+
+            populateRejectionTable() {
+                const tbody = document.querySelector('#rejectionTable tbody');
+                if (!tbody) return;
+                const totalRejection = this.data.summary.total_rejection;
+                tbody.innerHTML = this.data.rejection_defects.map(defect => {
+                    const percentage = ((defect.count / totalRejection) * 100).toFixed(1);
+                    return `
+                        <tr>
+                            <td>${defect.defect}</td>
+                            <td>${this.formatNumber(defect.count)}</td>
+                            <td>${percentage}%</td>
+                            <td>${percentage > 50 ? '🔴 High' : '🟡 Medium'}</td>
+                        </tr>
+                    `;
+                }).join('');
+                document.getElementById('rejectionStats').textContent = `${this.data.rejection_defects.length} rejection types`;
+            }
+
+            populateDailyTable() {
+                const tbody = document.querySelector('#dailyTable tbody');
+                if (!tbody) return;
+                const filter = document.getElementById('dailyFilter')?.value || 'all';
+                let filteredData = this.data.daily_data;
+
+                if (filter === 'high-rework') filteredData = filteredData.filter(d => d.rework_pct > 2.0);
+                else if (filter === 'high-rejection') filteredData = filteredData.filter(d => d.rejection_pct > 1.0);
+                else if (filter === 'excellent') filteredData = filteredData.filter(d => d.rework_pct < 1.0 && d.rejection_pct < 0.5);
+
+                tbody.innerHTML = filteredData.map(day => {
+                    const qualityScore = Math.max(0, 100 - (day.rework_pct * 10) - (day.rejection_pct * 15));
+                    const scoreEmoji = qualityScore >= 90 ? '🌟' : qualityScore >= 80 ? '✅' : '⚠️';
+                    let rowClass = '';
+                    if (day.rework_pct > 2.0) rowClass = 'high-rework';
+                    if (day.rejection_pct > 1.0) rowClass = 'high-rejection';
+                    if (day.rework_pct < 1.0 && day.rejection_pct < 0.5) rowClass = 'excellent-quality';
+                    
+                    return `
+                        <tr class="${rowClass}">
+                            <td>${this.formatDate(day.date)}</td>
+                            <td>${this.formatNumber(day.checked)}</td>
+                            <td>${this.formatNumber(day.rework)}</td>
+                            <td>${this.formatNumber(day.rejection)}</td>
+                            <td>${day.rework_pct.toFixed(2)}%</td>
+                            <td>${day.rejection_pct.toFixed(2)}%</td>
+                            <td>${scoreEmoji} ${qualityScore.toFixed(0)}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            searchTables(query) {
+                const tables = document.querySelectorAll('.data-table tbody');
+                query = query.toLowerCase();
+                tables.forEach(tbody => {
+                    tbody.querySelectorAll('tr').forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(query) ? '' : 'none';
+                    });
+                });
+            }
+
+            formatNumber(num) { return new Intl.NumberFormat().format(num); }
+            formatDate(dateString) { return new Date(dateString).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => new QualityDashboard());
+    </script>
+</body>
+</html>
